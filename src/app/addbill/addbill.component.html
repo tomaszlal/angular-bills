@@ -1,0 +1,38 @@
+<div class="container py-3">
+  <div class="h4 text-muted">Dodaj rachunek</div>
+  <div class="row g-2">
+      <div class="col-md-4">
+          <label for="selectCategory" class="form-label">Kategoria</label>
+          <select class="form-select" aria-label="Default select example" id="selectCategory" [ngModel]="selectedCategory" data-toggle="tooltip" title="Wybierz kategorię" (ngModelChange) ="validateCategoryField($event)">
+              <option [ngValue]="null" disabled >Wybierz kategorię..</option>
+              <option *ngFor="let category of categoryList" [ngValue]="category.id">{{category.name}}</option>
+          </select>
+      </div>
+      <div class="col-md-8">
+          <label class="form-label">Numer faktury/tytuł zapłaty</label>
+          <input type="text" class="form-control" [(ngModel)]="invoiceField" id="invoiceNumber" (ngModelChange)="validateInvoiceField()">
+      </div>
+      <div class="col-md-4">
+          <label for="validationCustomUsername" class="form-label">Kwota do zapłaty</label>
+          <input type="text" [(ngModel)]="amountField" class="form-control text-end" id="amount" (ngModelChange)="validateAmountField($event)">
+      </div>
+
+      <div class="col-md-4">
+          <label for="validationCustomUsername" class="form-label">Data wystawienia</label>
+          <input type="date" class="form-control" id="dateOfIssue" oninput="validateDateOfIssueField()">
+      </div>
+      <div class="col-md-4">
+          <label for="validationCustomUsername" class="form-label">Termin płatności</label>
+          <input type="date" class="form-control" id="dateOfPayment" oninput="validateDateOfPaymentField()">
+      </div>
+
+
+
+      <div class="col-12">
+          <button class="btn btn-primary" id="buttonAddBill" disabled onclick="saveBillInDb()">Dodaj rachunek</button>
+      </div>
+
+
+  </div>
+
+</div>
