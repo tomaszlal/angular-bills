@@ -1,38 +1,42 @@
 <div class="container py-3">
   <div class="h4 text-muted">Dodaj rachunek</div>
-  <div class="row g-2">
-      <div class="col-md-4">
-          <label for="selectCategory" class="form-label">Kategoria</label>
-          <select class="form-select" aria-label="Default select example" id="selectCategory" [ngModel]="selectedCategory" data-toggle="tooltip" title="Wybierz kategorię" (ngModelChange) ="validateCategoryField($event)">
-              <option [ngValue]="null" disabled >Wybierz kategorię..</option>
-              <option *ngFor="let category of categoryList" [ngValue]="category.id">{{category.name}}</option>
-          </select>
+  <form [formGroup]="formBill" class="row g-2" (submit)="saveBillInDb()">
+    <div class="col-md-4">
+      <label for="selectCategory" class="form-label">Kategoria</label>
+      <select id="selectCategory" formControlName="category" class="form-select" aria-label="Default select example">
+        <option [ngValue]="null" disabled>Wybierz kategorię ...</option>
+        <option *ngFor="let cat of categoryList" [ngValue]="cat">{{cat.name}}</option>
+      </select>
+      <div class="small text-danger" *ngIf="getCategoryField?.invalid && getCategoryField?.touched">Wybierz kategorię
       </div>
-      <div class="col-md-8">
-          <label class="form-label">Numer faktury/tytuł zapłaty</label>
-          <input type="text" class="form-control" [(ngModel)]="invoiceField" id="invoiceNumber" (ngModelChange)="validateInvoiceField()">
+    </div>
+    <div class="col-md-8">
+      <label for="invoiceNumber" class="form-label">Numer faktury/tytuł zapłaty</label>
+      <input type="text" class="form-control" id="invoiceNumber" formControlName="invoice">
+      <div class="small text-danger" *ngIf="getInvoiceField?.invalid && getInvoiceField?.touched">Pole wymaga minimum 6 znaków
       </div>
-      <div class="col-md-4">
-          <label for="validationCustomUsername" class="form-label">Kwota do zapłaty</label>
-          <input type="text" [(ngModel)]="amountField" class="form-control text-end" id="amount" (ngModelChange)="validateAmountField($event)">
+    </div>
+    <div class="col-md-4">
+      <label for="amount" class="form-label">Kwota do zapłaty</label>
+      <input type="text" class="form-control text-end" id="amount" formControlName="amount" [value]="amountField" (keypress)="onlyNumber($event)" (input)="changeAmount()" >
+      <div class="small text-danger" *ngIf="getAmountField?.invalid && getAmountField?.touched">Kwota nieprawidłowa
       </div>
-
-      <div class="col-md-4">
-          <label for="validationCustomUsername" class="form-label">Data wystawienia</label>
-          <input type="date" class="form-control" id="dateOfIssue" oninput="validateDateOfIssueField()">
+    </div>
+    <div class="col-md-4">
+      <label for="dateOfIssue" class="form-label">Data wystawienia</label>
+      <input type="date" class="form-control" id="dateOfIssue" formControlName="dateOfIssue">
+      <div class="small text-danger" *ngIf="getDateOfIssueField?.invalid && getDateOfIssueField?.touched">Pole wymagane
       </div>
-      <div class="col-md-4">
-          <label for="validationCustomUsername" class="form-label">Termin płatności</label>
-          <input type="date" class="form-control" id="dateOfPayment" oninput="validateDateOfPaymentField()">
+    </div>
+    <div class="col-md-4">
+      <label for="dateOfPayment" class="form-label">Termin płatności</label>
+      <input type="date" class="form-control" id="dateOfPayment" formControlName="dateOfPayment">
+      <div class="small text-danger" *ngIf="getDateOfPaymentField?.invalid && getDateOfPaymentField?.touched">Pole wymagane
       </div>
+    </div>
 
-
-
-      <div class="col-12">
-          <button class="btn btn-primary" id="buttonAddBill" disabled onclick="saveBillInDb()">Dodaj rachunek</button>
-      </div>
-
-
-  </div>
-
+    <div class="col-12">
+      <button class="btn btn-primary" id="buttonAddBill" [disabled]="formBill.invalid">Dodaj rachunek</button>
+    </div>
+  </form>
 </div>

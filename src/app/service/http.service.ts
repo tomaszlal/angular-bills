@@ -1,3 +1,4 @@
+import { Bill } from './../model/bill';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -29,5 +30,9 @@ export class HttpService {
 
   checkAccountNumber(accNum: string) : Observable<boolean>{
     return this.http.get<boolean>('http://192.168.0.210:8080/accountcheck/'+accNum);
+  }
+
+  addBill(bill: Bill): Observable<number> {
+    return this.http.post<number>('http://192.168.0.210:8080/bills',bill);
   }
 }

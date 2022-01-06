@@ -77,6 +77,7 @@ export class AddcategoryComponent implements OnInit {
     this.httpService.addCategory(category).subscribe((category) => {
       console.log(category);
       this.categoryList.push(category);
+      this.categoryForm.reset();
     });
   }
 
