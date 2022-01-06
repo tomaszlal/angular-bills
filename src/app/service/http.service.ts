@@ -35,4 +35,16 @@ export class HttpService {
   addBill(bill: Bill): Observable<number> {
     return this.http.post<number>('http://192.168.0.210:8080/bills',bill);
   }
+
+  getBills(): Observable<Array<Bill>>{
+    return this.http.get<Array<Bill>>('http://192.168.0.210:8080/bill');
+  }
+
+  getBillById(id: number): Observable<Bill>{
+    return this.http.get<Bill>('http://192.168.0.210:8080/bill/'+id);
+  }
+
+  deleteBillById(id: number): Observable<void>{
+    return this.http.delete<void>('http://192.168.0.210:8080/bill/'+id);
+}
 }

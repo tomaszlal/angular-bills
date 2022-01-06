@@ -1,1 +1,83 @@
-<p>listbills works!</p>
+<div class="container py-3">
+  <div class="row g-2">
+      <div class="h4 text-muted">Filtry</div>
+      <div class="col-md-4">
+          <select class="mb-2 form-select" aria-label="Default select example" id="select-category"
+              data-toggle="tooltip" title="Wybierz kategorię">
+              <option value="0">Wszystkie kategorie</option>
+          </select>
+      </div>
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-3">
+          <div class="mb-2 form-check">
+              <label class="form-check-label" for="check1">Tylko nie zapłacone</label>
+              <input type="checkbox" class="form-check-input" id="check1"  >
+          </div>
+      </div>
+  </div>
+
+</div>
+
+<div class="container-fluid my-3 py-3">
+  <table class="table table-striped table-hover table-bordered small">
+      <thead class="table-primary">
+          <tr>
+
+              <th scope="col" class="col-1 align-middle">Nazwa kategorii</th>
+              <th scope="col" class="col-1 d-sm-table-cell d-none align-middle">Nr faktury / tytuł zapłaty</th>
+              <th scope="col" class="col-1 d-md-table-cell d-none align-middle">Data wystawienia</th>
+              <th scope="col" class="col-1 align-middle">
+                  Termin płatności<br>
+                  <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
+                      onclick="sortDateOfPaymentAsc()">
+                  <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
+                      onclick="sortDateOfPaymentDesc()">
+              </th>
+              <th scope="col" class="col-1 align-middle">Kwota zapłaty</th>
+              <th scope="col" class="col-1 d-md-table-cell d-none align-middle">Data zapłaty</th>
+
+
+              <th scope="col" class="col-1 align-middle">Zapł.</th>
+              <th scope="col" class="col-2 align-middle">Akcja</th>
+          </tr>
+      </thead>
+      <tbody >
+          <tr *ngFor="let bill of listBills">
+            <td class="col-1 align-middle">{{bill.category?.name}}</td>
+            <td class="col-1 d-sm-table-cell d-none align-middle">{{bill.invoiceNumber}}</td>
+            <td class="col-1 d-md-table-cell d-none align-middle">{{bill.dateOfIssue}}</td>
+            <td class="col-1 align-middle">{{bill.dateOfPayment}}</td>
+            <td class="col-1 align-middle text-end">{{bill.amount}} zł</td>
+            <td class="col-1 d-md-table-cell d-none align-middle">{{bill.dueDate}}</td>
+            <td class="col-1 align-middle">{{bill.wasPaid?'Tak':'Nie'}}</td>
+            <td class="col-2 align-middle">
+              <img src="assets/icons_web/trash-2.svg" alt="Usuń" data-bs-toggle="modal"
+              data-bs-target="#delBillModal" (click)="setIdBillToDel(bill)">
+            </td>
+          </tr>
+      </tbody>
+  </table>
+</div>
+
+
+<!-- Modal deleting bills-->
+<div class="modal fade" id="delBillModal" tabindex="-1" aria-labelledby="delBillModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="delBillModalLabel">USUŃ</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              Czy usunąć rachunek na kwotę : {{billInContext?.amount}}<br>
+              dla kategorii : {{billInContext?.category?.name}}<br>
+              o numerze faktury : {{billInContext?.invoiceNumber}}
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" (click)="delBillFromDb()">Usuń</button>
+          </div>
+      </div>
+  </div>
+</div>

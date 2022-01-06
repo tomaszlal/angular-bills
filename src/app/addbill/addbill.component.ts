@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../model/category';
 import { HttpService } from '../service/http.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-addbill',
@@ -30,7 +31,7 @@ export class AddbillComponent implements OnInit {
   });
 
 
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService, private router: Router) {}
 
   ngOnInit(): void {
     this.getCategory();
@@ -99,6 +100,7 @@ export class AddbillComponent implements OnInit {
 
     this.httpService.addBill(bill).subscribe((bilId) =>{
       console.log(bilId);
+      this.router.navigate(['/']);
     });
 
   }
