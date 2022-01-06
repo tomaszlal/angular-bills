@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';//aby zastosować ngModel
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';//aby zastosować ngModel
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ListbillsComponent } from './listbills/listbills.component';
@@ -21,6 +21,7 @@ import { HttpClientModule} from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     FormsModule,   //aby zastosować ngModel - two way binding
+    ReactiveFormsModule,
     HttpClientModule
   ],
   providers: [HttpService],

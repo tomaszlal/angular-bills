@@ -1,6 +1,8 @@
+import { Observable } from 'rxjs';
 import { Category } from './../model/category';
 import { HttpService } from './../service/http.service';
 import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-addcategory',
@@ -8,16 +10,22 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
   styleUrls: ['./addcategory.component.css'],
 })
 export class AddcategoryComponent implements OnInit {
-  categoryName = ''; // two way data binding z polem nazwa kategorii
-  isCorrectlyFieldCategory = false; //czy prawidłowa wartość pola
+  public categoryForm: FormGroup = new FormGroup({
+    categoryName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]),
+    accountNumber: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^\d{26}?$/),
+    ]),
+    recipient: new FormControl('', [
+      Validators.required,
+      Validators.minLength(5),
+    ]),
+  });
 
-  accountNumber = '';
   isCorrectlyFieldAccountNumber = false;
-
-  recipient = '';
-  isCorrectlyFieldRecipient = false;
-
-  disableButAddCat = true; //włączenie przycisku dodaj kategorię
 
   categoryList = Array<Category>(); //lista kategorii wyświetlanych na stronie
 
@@ -31,70 +39,45 @@ export class AddcategoryComponent implements OnInit {
     console.log(this.categoryList);
   }
 
-  public nameCategoryFieldUpdate() {
-    if (this.categoryName.length > 3) {
-      this.isCorrectlyFieldCategory = true;
+  public onlyNumber(event: KeyboardEvent): boolean {
+    let charCode = event.key;
+    // wstawiaj tylko i wylacznie znaki 0-9  oraz reaguj na znaki sterujace
+    if (
+      (charCode.charCodeAt(0) > 47 && charCode.charCodeAt(0) < 58) ||
+      charCode.charCodeAt(0) < 32
+    ) {
+      return true;
     } else {
-      this.isCorrectlyFieldCategory = false;
+      return false;
     }
-    this.validateFormFields();
   }
 
-  public accounFieldUpdate(newValue: string) {
+  public accounFieldUpdate() {
     // polaczenie z api i sprawdzenie nr konta
-    this.accountNumber = this.accountNumber.replace(/\D+/, '');
-
-    console.log(this.accountNumber);
-    if (this.accountNumber.length == 26) {
-      this.httpService
-        .checkAccountNumber(this.accountNumber)
-        .subscribe((accIsCorect) => {
-          console.log(accIsCorect);
-          this.isCorrectlyFieldAccountNumber = accIsCorect;
-          this.validateFormFields();
-        });
+    const accNumb = this.categoryForm.controls.accountNumber.value;
+    // console.log(accNumb);
+    if (accNumb.length == 26) {
+      this.httpService.checkAccountNumber(accNumb).subscribe((accIsCorect) => {
+        this.isCorrectlyFieldAccountNumber = accIsCorect;
+        // console.log(this.isCorrectlyFieldAccountNumber);
+      });
     } else {
       this.isCorrectlyFieldAccountNumber = false;
-      this.validateFormFields();
-    }
-  }
-
-  public recipientCategoryFieldUpdate() {
-    if (this.recipient.length > 5) {
-      this.isCorrectlyFieldRecipient = true;
-    } else {
-      this.isCorrectlyFieldRecipient = false;
-    }
-    this.validateFormFields();
-  }
-
-  private validateFormFields() {
-    if (
-      this.isCorrectlyFieldCategory &&
-      this.isCorrectlyFieldAccountNumber &&
-      this.isCorrectlyFieldRecipient
-    ) {
-      this.disableButAddCat = false;
-    } else {
-      this.disableButAddCat = true;
+      // console.log(this.isCorrectlyFieldAccountNumber);
     }
   }
 
   public saveCategoryToDb() {
     const category: Category = {
-      name: this.categoryName,
-      accountNumber: this.accountNumber,
-      recipient: this.recipient,
+      name: this.categoryForm.controls.categoryName.value,
+      accountNumber: this.categoryForm.controls.accountNumber.value,
+      recipient: this.categoryForm.controls.recipient.value,
     };
 
     this.httpService.addCategory(category).subscribe((category) => {
       console.log(category);
       this.categoryList.push(category);
     });
-
-    this.categoryName = '';
-    this.accountNumber = '';
-    this.recipient = '';
   }
 
   public getCategoryById(id: number) {
@@ -115,11 +98,10 @@ export class AddcategoryComponent implements OnInit {
     this.httpService.deleteCategoryById(id).subscribe((isDeleted) => {
       console.log(isDeleted);
       if (isDeleted) {
-
         this.clearListCategory();
         this.getCategory();
       } else {
-        alert("Błąd podaczas usuwania - kategoria używana w rachunkach");
+        alert('Błąd podaczas usuwania - kategoria używana w rachunkach');
       }
     });
   }
@@ -140,5 +122,18 @@ export class AddcategoryComponent implements OnInit {
     for (let i = 0; i < numberOfElem; i++) {
       this.categoryList.pop();
     }
+  }
+
+  //geters
+  get nameCategory() {
+    return this.categoryForm.get('categoryName');
+  }
+
+  get numberAccount() {
+    return this.categoryForm.get('accountNumber');
+  }
+
+  get getRecipient() {
+    return this.categoryForm.get('recipient');
   }
 }
