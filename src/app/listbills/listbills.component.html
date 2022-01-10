@@ -1,75 +1,103 @@
 <div class="container py-3">
   <div class="row g-2">
-      <div class="h4 text-muted">Filtry</div>
-      <div class="col-md-4">
-          <select class="mb-2 form-select" aria-label="Default select example" id="select-category"
-              data-toggle="tooltip" title="Wybierz kategorię">
-              <option value="0">Wszystkie kategorie</option>
-          </select>
+    <div class="h4 text-muted">Filtry</div>
+    <div class="col-md-4" [formGroup]="formFiltr">
+      <select class="mb-2 form-select" formControlName="category" aria-label="Default select example" id="select-category" data-toggle="tooltip"
+        title="Wybierz kategorię" (change)="selectCategory()">
+        <option [ngValue]="null" value="0">Wszystkie kategorie</option>
+        <option *ngFor="let cat of listCategories" [ngValue]="cat">{{cat.name}}</option>
+      </select>
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-3">
+      <div class="mb-2 form-check">
+        <label class="form-check-label" for="check1">Tylko nie zapłacone</label>
+        <input type="checkbox" class="form-check-input" id="check1" (change)="onlyNotPaid()">
       </div>
-      <div class="col-md-1">
-      </div>
-      <div class="col-md-3">
-          <div class="mb-2 form-check">
-              <label class="form-check-label" for="check1">Tylko nie zapłacone</label>
-              <input type="checkbox" class="form-check-input" id="check1"  >
-          </div>
-      </div>
+    </div>
   </div>
 
 </div>
 
 <div class="container-fluid my-3 py-3">
   <table class="table table-striped table-hover table-bordered small">
-      <thead class="table-primary">
-          <tr>
+    <thead class="table-primary">
+      <tr>
 
-              <th scope="col" class="col-1 align-middle">Nazwa kategorii</th>
-              <th scope="col" class="col-1 d-sm-table-cell d-none align-middle">Nr faktury / tytuł zapłaty</th>
-              <th scope="col" class="col-1 d-md-table-cell d-none align-middle">Data wystawienia</th>
-              <th scope="col" class="col-1 align-middle">
-                  Termin płatności<br>
-                  <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
-                      onclick="sortDateOfPaymentAsc()">
-                  <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
-                      onclick="sortDateOfPaymentDesc()">
-              </th>
-              <th scope="col" class="col-1 align-middle">Kwota zapłaty</th>
-              <th scope="col" class="col-1 d-md-table-cell d-none align-middle">Data zapłaty</th>
+        <th scope="col" class="col-1 align-bottom text-center">
+          Nazwa kategorii<br>
+          <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
+          (click)="sortCategoryAsc()">
+        <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
+          (click)="sortCategoryDesc()">
+        </th>
+        <th scope="col" class="col-1 d-sm-table-cell d-none align-bottom text-center">
+          Nr faktury / tytuł zapłaty<br>
+          <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
+          (click)="sortInvoiceAsc()">
+        <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
+          (click)="sortInvoiceDesc()">
+        </th>
+        <th scope="col" class="col-1 d-md-table-cell d-none align-bottom text-center">
+          Data wystawienia<br>
+          <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
+          (click)="sortDateOfIssueAsc()">
+        <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
+          (click)="sortDateOfIssueDesc()">
+        </th>
+        <th scope="col" class="col-1 align-middle text-center">
+          Termin płatności<br>
+          <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
+            (click)="sortDateOfPaymentAsc()">
+          <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
+            (click)="sortDateOfPaymentDesc()">
+        </th>
+        <th scope="col" class="col-1 align-bottom text-center">
+          Kwota zapłaty<br>
+          <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
+            (click)="sortAmountAsc()">
+          <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
+            (click)="sortAmountDesc()">
+        </th>
+        <th scope="col" class="col-1 d-md-table-cell d-none align-bottom text-center">
+          Data zapłaty<br>
+          <img src="assets/icons_web/arrow-up.svg" alt="Rosnąco" data-toggle="tooltip" title="Sortuj rosnąco"
+            (click)="sortDueDateAsc()">
+          <img src="assets/icons_web/arrow-down.svg" alt="Malejąco" data-toggle="tooltip" title="Sortuj malejąco"
+            (click)="sortDueDateDesc()">
+        </th>
 
 
-              <th scope="col" class="col-1 align-middle">Zapł.</th>
-              <th scope="col" class="col-2 align-middle">Akcja</th>
-          </tr>
-      </thead>
-      <tbody >
-          <tr *ngFor="let bill of listBills">
+        <th scope="col" class="col-1 align-bottom text-center">Zapł.<br></th>
+        <th scope="col" class="col-2 align-bottom text-center">Akcja<br></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let bill of listBills | sortBy: ascending: headColumnNr">
+        <ng-container *ngIf="(!bill.wasPaid || !notPaid)">
+          <ng-container *ngIf="allCategories || (bill.category?.id == numberOfFiltCat)">
             <td class="col-1 align-middle">{{bill.category?.name}}</td>
             <td class="col-1 d-sm-table-cell d-none align-middle">{{bill.invoiceNumber}}</td>
             <td class="col-1 d-md-table-cell d-none align-middle">{{bill.dateOfIssue}}</td>
             <td class="col-1 align-middle">{{bill.dateOfPayment}}</td>
-            <td class="col-1 align-middle text-end">{{bill.amount}} zł</td>
+            <td class="col-1 align-middle text-end">{{bill.amount | currency:'zł'}}</td>
             <td class="col-1 d-md-table-cell d-none align-middle">{{bill.dueDate}}</td>
             <td class="col-1 align-middle">{{bill.wasPaid?'Tak':'Nie'}}</td>
             <td class="col-2 align-middle">
-              <img src="assets/icons_web/trash-2.svg" alt="Usuń" data-bs-toggle="modal"
-              data-bs-target="#delBillModal" data-toggle="tooltip" title="Usuń rachunek"
-              (click)="setIdBillToDel(bill)">
-              <img src="assets/icons_web/eye.svg" alt="Zobacz" data-bs-toggle="modal"
-              data-bs-target="#showBillModal" data-toggle="tooltip" title="Podgląd rachunku"
-              (click)="setBillToInContext(bill)">
-
-              <img src="assets/icons_web/edit-2.svg" alt="Edytuj" data-bs-toggle="modal"
-              data-bs-target="#editBillModal" data-toggle="tooltip" title="Edycja rachunku"
-              (click)="setBillToEdit(bill)" >
-
-              <img *ngIf="!bill.wasPaid" src="assets/icons_web/dollar-sign.svg"
-              alt="Zapłać" data-bs-toggle="modal"
-              data-bs-target="#payBillModal" data-toggle="tooltip" title="zapłać"
-              (click)="setBillToInContext(bill)">
+              <img src="assets/icons_web/trash-2.svg" alt="Usuń" data-bs-toggle="modal" data-bs-target="#delBillModal"
+                class="px-1" data-toggle="tooltip" title="Usuń rachunek" (click)="setIdBillToDel(bill)">
+              <img src="assets/icons_web/eye.svg" alt="Zobacz" data-bs-toggle="modal" data-bs-target="#showBillModal"
+              class="px-1" data-toggle="tooltip" title="Podgląd rachunku" (click)="setBillToInContext(bill)">
+              <img src="assets/icons_web/edit-2.svg" alt="Edytuj" data-bs-toggle="modal" data-bs-target="#editBillModal"
+              class="px-1" data-toggle="tooltip" title="Edycja rachunku" (click)="setBillToEdit(bill)">
+              <img *ngIf="!bill.wasPaid" src="assets/icons_web/dollar-sign.svg" alt="Zapłać" data-bs-toggle="modal"
+              class="px-1" data-bs-target="#payBillModal" data-toggle="tooltip" title="zapłać" (click)="setBillToInContext(bill)">
             </td>
-          </tr>
-      </tbody>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </tbody>
   </table>
 </div>
 
@@ -77,171 +105,176 @@
 <!-- Modal deleting bills-->
 <div class="modal fade" id="delBillModal" tabindex="-1" aria-labelledby="delBillModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="delBillModalLabel">USUŃ</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              Czy usunąć rachunek na kwotę : {{billInContext?.amount}}<br>
-              dla kategorii : {{billInContext?.category?.name}}<br>
-              o numerze faktury : {{billInContext?.invoiceNumber}}
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-              <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" (click)="delBillFromDb()">Usuń</button>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delBillModalLabel">USUŃ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-  </div>
-</div>
-
- <!-- Modal show bills-->
- <div class="modal fade" id="showBillModal" tabindex="-1" aria-labelledby="showBillModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="showBillModalLabel">Podgląd rachunku</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              <table class="table ">
-
-                  <tr>
-                      <td class="text-end">Kategoria : </td>
-                      <td id="category">{{billInContext?.category?.name}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Nr konta : </td>
-                      <td id="accounNumber">{{billInContext?.category?.accountNumber}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Odbiorca : </td>
-                      <td id="recipient">{{billInContext?.category?.recipient}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Nr faktury/ tytuł zapłaty : </td>
-                      <td id="invoiceNumber">{{billInContext?.invoiceNumber}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Data wystawienia : </td>
-                      <td id="dateOfIssue">{{billInContext?.dateOfIssue}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Termin płatności : </td>
-                      <td id="dateOfPayment">{{billInContext?.dateOfPayment}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Data zapłaty : </td>
-                      <td id="dateDue">{{billInContext?.dueDate}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Zapłacone : </td>
-                      <td id="wasPaid">{{(billInContext?.wasPaid)?"Tak":"Nie"}}</td>
-                  </tr>
-                  <tr>
-                      <td class="text-end">Kwota : </td>
-                      <td id="amount">{{billInContext?.amount}} zł</td>
-                  </tr>
-              </table>
-          </div>
-          <div class="modal-footer">
-
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
-          </div>
+      <div class="modal-body">
+        Czy usunąć rachunek na kwotę : {{billInContext?.amount | currency:'zł'}}<br>
+        dla kategorii : {{billInContext?.category?.name}}<br>
+        o numerze faktury : {{billInContext?.invoiceNumber}}
       </div>
-  </div>
-</div>
-
-  <!-- Modal pay bill-->
-  <div class="modal fade" id="payBillModal" tabindex="-1" aria-labelledby="payBillModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="payBillModalLabel">Wyślij przelew i wprowadź datę</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-                <div class="mb-3">
-                    <label for="accountFieldPay" class="form-label">Nr konta</label>
-                    <input type="text" class="form-control" id="accountFieldPay" [value]="billInContext.category?.accountNumber" disabled>
-                </div>
-                <div class="mb-3">
-                    <label for="recipientFieldPay" class="form-label">Odbiorca</label>
-                    <input type="text" class="form-control" id="recipientFieldPay" [value]="billInContext.category?.recipient"  disabled>
-                </div>
-                <div class="mb-3">
-                    <label for="invoiceFieldPay" class="form-label">Nr faktury/tytuł zapłaty</label>
-                    <input type="text" class="form-control" id="invoiceFieldPay" [value]="billInContext.invoiceNumber" disabled>
-                </div>
-                <div class="mb-3">
-                    <label for="amountFieldPay" class="form-label">Kwota do zapłaty</label>
-                    <input type="text" class="form-control" id="amountFieldPay" [value]="billInContext.amount" disabled>
-                </div>
-                <div class="mb-3" [formGroup]="formToPay" >
-                    <label for="dateDueFieldPay" class="form-label">Data zapłaty</label>
-                    <input type="date" class="form-control" id="dateDueFieldPay" formControlName="fieldDueDate">
-                </div>
-            </div>
-            <div class="modal-footer">
-
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                <button type="submit" class="btn btn-success" data-bs-dismiss="modal" id="buttonPay"
-                     [disabled]="formToPay.invalid" (click)="updateBillInDb()">Zapłać</button>
-            </div>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" (click)="delBillFromDb()">Usuń</button>
+      </div>
     </div>
+  </div>
 </div>
 
- <!-- Modal edit bill-->
- <div class="modal fade" id="editBillModal" tabindex="-1" aria-labelledby="editBillModalLabel" aria-hidden="true">
+<!-- Modal show bills-->
+<div class="modal fade" id="showBillModal" tabindex="-1" aria-labelledby="showBillModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="editBillModalLabel">Wyślij przelew i wprowadź datę</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" [formGroup]="formToEdit">
-              <label for="editSelectCategory" class="form-label">Kategoria</label>
-              <select class="mb-3 form-select" formControlName="category" aria-label="Default select example" id="editSelectCategory"
-                  data-toggle="tooltip" title="Zmień kategorię">
-                  <option *ngFor="let cat of listCategories" [ngValue]="cat" [selected]="cat.id==billInContext.category?.id">{{cat.name}}</option>
-              </select>
-              <div class="mb-3">
-                  <label for="invoiceFieldEdit" class="form-label">Nr faktury/tytuł zapłaty</label>
-                  <input type="text" formControlName="invoice" [value]="billInContext.invoiceNumber" class="form-control" id="invoiceFieldEdit" >
-              </div>
-              <div class="mb-3">
-                  <label for="amountFieldEdit" class="form-label">Kwota do zapłaty</label>
-                  <input type="text" formControlName="amount"  class="form-control text-end" id="amountFieldEdit" >
-              </div>
-              <div class="mb-3">
-                  <label for="dateOfIssueFieldEdit" class="form-label">Data wystawienia</label>
-                  <input type="date" formControlName="dateOfIssue"  class="form-control" id="dateOfIssueFieldEdit">
-              </div>
-
-              <div class="mb-3">
-                  <label for="dateOfPaymentFieldEdit" class="form-label">Termin płatności</label>
-                  <input type="date" formControlName="dateOfPayment" class="form-control" id="dateOfPaymentFieldEdit">
-              </div>
-              <div class="mb-3">
-                  <label for="dateDueFieldEdit" class="form-label">Data zapłaty</label>
-                  <input type="date" formControlName="dueDate"   class="form-control" id="dateDueFieldEdit" >
-              </div>
-
-
-              <div class="mb-3 form-check">
-                  <input type="checkbox" formControlName="wasPaid"  (change)="changeInPaid()" class="form-check-input" id="checkWasPaid" >
-                  <label class="form-check-label" for="checkWasPaid">Zapłacony</label>
-              </div>
-          </div>
-          <div class="modal-footer">
-
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-              <button type="submit" class="btn btn-warning" data-bs-dismiss="modal" id="buttonPay"
-               (click)="saveBillToDb()" [disabled]="formToEdit.invalid"  >Zapisz</button>
-
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showBillModalLabel">Podgląd rachunku</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <table class="table ">
+
+          <tr>
+            <td class="text-end">Kategoria : </td>
+            <td id="category">{{billInContext?.category?.name}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Nr konta : </td>
+            <td id="accounNumber">{{billInContext?.category?.accountNumber}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Odbiorca : </td>
+            <td id="recipient">{{billInContext?.category?.recipient}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Nr faktury/ tytuł zapłaty : </td>
+            <td id="invoiceNumber">{{billInContext?.invoiceNumber}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Data wystawienia : </td>
+            <td id="dateOfIssue">{{billInContext?.dateOfIssue}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Termin płatności : </td>
+            <td id="dateOfPayment">{{billInContext?.dateOfPayment}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Data zapłaty : </td>
+            <td id="dateDue">{{billInContext?.dueDate}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Zapłacone : </td>
+            <td id="wasPaid">{{(billInContext?.wasPaid)?"Tak":"Nie"}}</td>
+          </tr>
+          <tr>
+            <td class="text-end">Kwota : </td>
+            <td id="amount">{{billInContext?.amount | currency:'zł'}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pay bill-->
+<div class="modal fade" id="payBillModal" tabindex="-1" aria-labelledby="payBillModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="payBillModalLabel">Wyślij przelew i wprowadź datę</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="mb-3">
+          <label for="accountFieldPay" class="form-label">Nr konta</label>
+          <input type="text" class="form-control" id="accountFieldPay" [value]="billInContext.category?.accountNumber"
+            disabled>
+        </div>
+        <div class="mb-3">
+          <label for="recipientFieldPay" class="form-label">Odbiorca</label>
+          <input type="text" class="form-control" id="recipientFieldPay" [value]="billInContext.category?.recipient"
+            disabled>
+        </div>
+        <div class="mb-3">
+          <label for="invoiceFieldPay" class="form-label">Nr faktury/tytuł zapłaty</label>
+          <input type="text" class="form-control" id="invoiceFieldPay" [value]="billInContext.invoiceNumber" disabled>
+        </div>
+        <div class="mb-3">
+          <label for="amountFieldPay" class="form-label">Kwota do zapłaty</label>
+          <input type="text" class="form-control" id="amountFieldPay" [value]="billInContext.amount" disabled>
+        </div>
+        <div class="mb-3" [formGroup]="formToPay">
+          <label for="dateDueFieldPay" class="form-label">Data zapłaty</label>
+          <input type="date" class="form-control" id="dateDueFieldPay" formControlName="fieldDueDate">
+        </div>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+        <button type="submit" class="btn btn-success" data-bs-dismiss="modal" id="buttonPay"
+          [disabled]="formToPay.invalid" (click)="updateBillInDb()">Zapłać</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal edit bill-->
+<div class="modal fade" id="editBillModal" tabindex="-1" aria-labelledby="editBillModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-warning" id="editBillModalLabel">Edycja rachunku</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" [formGroup]="formToEdit">
+        <label for="editSelectCategory" class="form-label">Kategoria</label>
+        <select class="mb-3 form-select" formControlName="category" aria-label="Default select example"
+          id="editSelectCategory" data-toggle="tooltip" title="Zmień kategorię">
+          <option *ngFor="let cat of listCategories" [ngValue]="cat" [selected]="cat.id==billInContext.category?.id">
+            {{cat.name}}</option>
+        </select>
+        <div class="mb-3">
+          <label for="invoiceFieldEdit" class="form-label">Nr faktury/tytuł zapłaty</label>
+          <input type="text" formControlName="invoice" [value]="billInContext.invoiceNumber" class="form-control"
+            id="invoiceFieldEdit">
+        </div>
+        <div class="mb-3">
+          <label for="amountFieldEdit" class="form-label">Kwota do zapłaty</label>
+          <input type="text" formControlName="amount" class="form-control text-end" id="amountFieldEdit">
+        </div>
+        <div class="mb-3">
+          <label for="dateOfIssueFieldEdit" class="form-label">Data wystawienia</label>
+          <input type="date" formControlName="dateOfIssue" class="form-control" id="dateOfIssueFieldEdit">
+        </div>
+
+        <div class="mb-3">
+          <label for="dateOfPaymentFieldEdit" class="form-label">Termin płatności</label>
+          <input type="date" formControlName="dateOfPayment" class="form-control" id="dateOfPaymentFieldEdit">
+        </div>
+        <div class="mb-3">
+          <label for="dateDueFieldEdit" class="form-label">Data zapłaty</label>
+          <input type="date" formControlName="dueDate" class="form-control" id="dateDueFieldEdit">
+        </div>
+
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" formControlName="wasPaid" (change)="changeInPaid()" class="form-check-input"
+            id="checkWasPaid">
+          <label class="form-check-label" for="checkWasPaid">Zapłacony</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+        <button type="submit" class="btn btn-warning" data-bs-dismiss="modal" id="buttonPay" (click)="saveBillToDb()"
+          [disabled]="formToEdit.invalid">Zapisz</button>
+
+      </div>
+    </div>
   </div>
 </div>

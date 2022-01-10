@@ -8,8 +8,8 @@ import { Category } from '../model/category';
   providedIn: 'root',
 })
 export class HttpService {
-  // apiUrl:string = 'http://' + location.hostname + ':8080';
-  apiUrl: string = 'http://192.168.0.210:8080'; // w domu
+  apiUrl:string = 'http://' + location.hostname + ':8080';
+  // apiUrl: string = 'http://192.168.0.210:8080'; // w domu
   // apiUrl:string = 'http://192.168.192.210:8080'; // poza domem
 
   constructor(private http: HttpClient) {}
